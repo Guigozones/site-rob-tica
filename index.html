@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta de Patrocínio | Equipe Robótica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Cybernetic Blue -->
+    <!-- Application Structure Plan: A single-page scrolling application with a sticky top navigation for easy access to key sections (Equipe, Desafio, Projeto, Impacto, Patrocínio, Contato). This structure allows for both a linear narrative flow for new visitors and quick, non-linear access for users who want to jump to specific information, like the sponsorship tiers. This is more user-friendly and engaging than a static, slide-by-slide presentation, as it empowers the user to explore based on their interests, which is crucial when targeting busy decision-makers. -->
+    <!-- Visualization & Content Choices: 
+        - Budget Breakdown: Report Info -> Budget allocation. Goal -> Inform transparently. Viz/Method -> Interactive Donut Chart (Chart.js). Interaction -> Hover tooltips. Justification -> Visually engaging way to show parts of a whole, more effective than a list.
+        - Team Trajectory: Report Info -> Milestones and awards. Goal -> Build credibility. Viz/Method -> Vertical timeline with HTML/CSS. Interaction -> Hover effects. Justification -> Narrates the team's success story effectively.
+        - Sponsorship Tiers: Report Info -> Sponsorship levels and benefits. Goal -> Compare options and drive action. Viz/Method -> Responsive card grid (HTML/CSS). Interaction -> Highlighted master tier, hover effects. Justification -> Facilitates easy comparison for decision-making.
+        - Navigation: Report Info -> Document sections. Goal -> Easy exploration. Viz/Method -> Sticky navbar with smooth scroll (JS). Interaction -> Active section highlighting. Justification -> Standard, intuitive UX for SPAs.
+        - Gemini Pitch Generator: Report Info -> Team values and sponsor needs. Goal -> Personalize the pitch. Viz/Method -> Input form + API call + dynamic result display. Interaction -> User inputs data, clicks a button. Justification -> Highly engaging and demonstrates tech-savviness.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        :root {
+            --bg-dark: #0A192F;
+            --bg-light: #172A45;
+            --text-light: #CCD6F6;
+            --text-dark: #8892B0;
+            --accent-blue: #64FFDA;
+            --accent-orange: #FF8C42;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            background-image: linear-gradient(rgba(17, 42, 69, 0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(17, 42, 69, 0.8) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Roboto Mono', monospace;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: auto;
+            max-height: 450px;
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+            color: var(--text-light);
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-blue);
+            text-shadow: 0 0 5px var(--accent-blue);
+        }
+        .cta-button {
+            transition: all 0.3s ease;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            background-color: transparent;
+        }
+        .cta-button:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            box-shadow: 0 0 15px var(--accent-blue);
+            transform: translateY(-3px);
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--accent-blue);
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .card {
+            background-color: var(--bg-light);
+            border: 1px solid #233554;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+        }
+        .hero-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(10, 25, 47, 0.7);
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Nav -->
+    <header id="header" class="bg-[#0A192F]/80 backdrop-blur-md sticky top-0 z-50 shadow-lg shadow-black/20">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-white tracking-wider">EQUIPE_ROBOTICA/></a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#equipe" class="nav-link">./equipe</a>
+                <a href="#desafio" class="nav-link">./desafio</a>
+                <a href="#impacto" class="nav-link">./impacto</a>
+                <a href="#patrocinio" class="nav-link">./patrocinio</a>
+                <a href="#contato" class="nav-link">./contato</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-white focus:outline-none">
+                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-3 flex flex-col space-y-2">
+            <a href="#equipe" class="block py-2 text-center text-white hover:text-cyan-400">./equipe</a>
+            <a href="#desafio" class="block py-2 text-center text-white hover:text-cyan-400">./desafio</a>
+            <a href="#impacto" class="block py-2 text-center text-white hover:text-cyan-400">./impacto</a>
+            <a href="#patrocinio" class="block py-2 text-center text-white hover:text-cyan-400">./patrocinio</a>
+            <a href="#contato" class="block py-2 text-center text-white hover:text-cyan-400">./contato</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="relative h-[70vh] md:h-[90vh] bg-cover bg-center flex items-center justify-center text-white" style="background-image: url('https://placehold.co/1600x900/0A192F/64FFDA?text=Imagem+de+um+robô+de+competição');">
+            <div class="hero-overlay"></div>
+            <div class="text-center p-8 rounded-lg z-10">
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight text-white animate-pulse">ENGENHARIA BRASILEIRA</h1>
+                <p class="mt-4 text-lg md:text-xl text-[var(--text-light)]">Compilando o futuro, um robô de cada vez.</p>
+                <a href="#patrocinio" class="cta-button mt-8 inline-block font-mono py-3 px-8 rounded-sm text-lg shadow-lg">
+                    [ INICIAR_PARCERIA ]
+                </a>
+            </div>
+        </section>
+
+        <!-- A Equipe Section -->
+        <section id="equipe" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-white"><span class="text-[var(--accent-blue)]">01.</span> QUEM SOMOS</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-lg text-[var(--text-dark)]">
+                        Esta seção apresenta a nossa equipe, nossa missão e a jornada de sucesso que nos trouxe até aqui. Somos um grupo de estudantes apaixonados por tecnologia, dedicados a inovar e a inspirar a próxima geração de líderes no Brasil. Conheça as mentes e mãos por trás do projeto.
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-3xl font-semibold mb-4 text-white">Nossa Missão</h3>
+                        <p class="text-[var(--text-light)] mb-6">
+                            Somos um grupo de estudantes de [Sua Cidade], apaixonados por ciência, tecnologia, engenharia e matemática (STEM). Nossa missão é desenvolver soluções robóticas criativas, fomentar o trabalho em equipe, a liderança e inspirar novos talentos. Cada peça montada e cada linha de código representa um passo no nosso desenvolvimento.
+                        </p>
+                        <h3 class="text-3xl font-semibold mb-6 text-white">Nossa Trajetória</h3>
+                        <div class="relative border-l-2 border-[var(--accent-blue)]/50 pl-6 space-y-10">
+                            <div class="relative">
+                                <div class="absolute -left-[35px] top-1/2 -translate-y-1/2 w-4 h-4 bg-[var(--bg-dark)] border-2 border-[var(--accent-blue)] rounded-full"></div>
+                                <p class="font-semibold text-white">[Ano] - Fundação</p>
+                                <p class="text-sm text-[var(--text-dark)]">O início do nosso sonho e da nossa jornada na robótica.</p>
+                            </div>
+                            <div class="relative">
+                                <div class="absolute -left-[35px] top-1/2 -translate-y-1/2 w-4 h-4 bg-[var(--bg-dark)] border-2 border-[var(--accent-blue)] rounded-full"></div>
+                                <p class="font-semibold text-white">[Prêmio 1] - Prêmio de Inovação</p>
+                                <p class="text-sm text-[var(--text-dark)]">Reconhecimento pelo design criativo em nossa primeira competição nacional.</p>
+                            </div>
+                            <div class="relative">
+                                <div class="absolute -left-[35px] top-1/2 -translate-y-1/2 w-4 h-4 bg-[var(--bg-dark)] border-2 border-[var(--accent-blue)] rounded-full"></div>
+                                <p class="font-semibold text-white">[Ano Atual] - Classificação para o Mundial</p>
+                                <p class="text-sm text-[var(--text-dark)]">Conquistamos a vaga para representar o Brasil na maior competição de robótica do mundo!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <img src="https://placehold.co/400x400/172A45/64FFDA?text=Membro+1" alt="Membro da equipe" class="rounded-sm object-cover w-full h-full filter grayscale hover:grayscale-0 transition duration-300">
+                        <img src="https://placehold.co/400x400/FF8C42/0A192F?text=Membro+2" alt="Membro da equipe" class="rounded-sm object-cover w-full h-full filter grayscale hover:grayscale-0 transition duration-300">
+                        <img src="https://placehold.co/400x400/64FFDA/0A192F?text=Mentor+1" alt="Mentor da equipe" class="rounded-sm object-cover w-full h-full col-span-2 filter grayscale hover:grayscale-0 transition duration-300">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- O Desafio Section -->
+        <section id="desafio" class="py-20 bg-[var(--bg-light)]/50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-white"><span class="text-[var(--accent-blue)]">02.</span> O DESAFIO MUNDIAL</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-lg text-[var(--text-dark)]">
+                        Aqui, detalhamos o palco onde vamos competir e a solução de engenharia que desenvolvemos. O Campeonato Mundial é o auge da robótica estudantil, e nosso robô, o [Nome do Robô], foi projetado para superar esse desafio com tecnologia de ponta e estratégia inteligente.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 md:order-1">
+                        <h3 class="text-3xl font-semibold mb-4 text-white">O Palco Global da Inovação</h3>
+                        <p class="text-[var(--text-light)] mb-4">
+                            O [Nome da Competição Mundial] é o mais prestigiado torneio de robótica do mundo, reunindo mais de [Número] equipes de [Número] países. É uma honra e uma responsabilidade representar o Brasil, mostrando a força da nossa educação e tecnologia.
+                        </p>
+                        <h3 class="text-3xl font-semibold mb-4 text-white">PROJETO: [Nome do Robô]</h3>
+                        <p class="text-[var(--text-light)] mb-6">
+                            Para o desafio de [descrever brevemente o objetivo da competição], projetamos uma solução robusta com diferenciais técnicos:
+                        </p>
+                        <ul class="space-y-4 font-mono text-sm">
+                            <li class="flex items-start"><span class="text-[var(--accent-blue)] mr-3">></span><div><strong class="text-white block">Mecânica Avançada:</strong> Um sistema de tração inovador para máxima agilidade.</div></li>
+                            <li class="flex items-start"><span class="text-[var(--accent-blue)] mr-3">></span><div><strong class="text-white block">Eletrônica de Ponta:</strong> Sensores de visão computacional para reconhecimento de objetos.</div></li>
+                            <li class="flex items-start"><span class="text-[var(--accent-blue)] mr-3">></span><div><strong class="text-white block">Software Inteligente:</strong> Algoritmos de IA para tomada de decisão autônoma.</div></li>
+                        </ul>
+                    </div>
+                    <div class="order-1 md:order-2">
+                        <div class="p-2 border-2 border-[var(--accent-blue)]/30 rounded-sm">
+                            <img src="https://placehold.co/600x450/0A192F/64FFDA?text=Blueprint+do+Robô" alt="Render do Robô" class="rounded-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Impacto Section -->
+        <section id="impacto" class="py-20">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-white"><span class="text-[var(--accent-blue)]">03.</span> RETORNO SOBRE INVESTIMENTO</h2>
+                     <p class="mt-4 max-w-3xl mx-auto text-lg text-[var(--text-dark)]">
+                        Apoiar nossa equipe é mais do que patrocinar um robô; é um investimento no futuro e uma oportunidade única de visibilidade. Nesta seção, demonstramos como sua marca se conecta com valores de inovação, educação e desenvolvimento social, alcançando um público amplo e engajado.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card p-8 text-center">
+                        <div class="text-5xl mb-4 text-[var(--accent-blue)]">⚙️</div>
+                        <h3 class="text-2xl font-semibold mb-2 text-white">Desenvolvimento de Talentos</h3>
+                        <p class="text-[var(--text-dark)]">Sua empresa investe na formação de futuros engenheiros e líderes que poderão integrar o mercado com experiência de nível mundial.</p>
+                    </div>
+                    <div class="card p-8 text-center">
+                         <div class="text-5xl mb-4 text-[var(--accent-blue)]">💡</div>
+                        <h3 class="text-2xl font-semibold mb-2 text-white">Inspiração e Comunidade</h3>
+                        <p class="text-[var(--text-dark)]">Realizamos workshops em escolas locais, despertando o interesse pelas carreiras STEM e ampliando nosso impacto social com o seu apoio.</p>
+                    </div>
+                    <div class="card p-8 text-center">
+                        <div class="text-5xl mb-4 text-[var(--accent-blue)]">📈</div>
+                        <h3 class="text-2xl font-semibold mb-2 text-white">Visibilidade e Inovação</h3>
+                        <p class="text-[var(--text-dark)]">Associe sua marca a um projeto de sucesso, tecnologia e alcance internacional, reforçando seu compromisso com o futuro do Brasil.</p>
+                    </div>
+                </div>
+             </div>
+        </section>
+        
+        <!-- Patrocínio Section -->
+        <section id="patrocinio" class="py-20 bg-[var(--bg-light)]/50">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-white"><span class="text-[var(--accent-blue)]">04.</span> JUNTE-SE À MISSÃO</h2>
+                     <p class="mt-4 max-w-3xl mx-auto text-lg text-[var(--text-dark)]">
+                        Para transformar nosso sonho em realidade, buscamos parceiros estratégicos que acreditam no poder da educação e da tecnologia. Aqui, apresentamos de forma transparente como seu investimento será aplicado e quais são as oportunidades e benefícios de se tornar um patrocinador oficial da nossa equipe.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-5 gap-12 items-center mb-20">
+                    <div class="lg:col-span-2">
+                        <h3 class="text-3xl font-semibold mb-4 text-white">ALOCAÇÃO DE RECURSOS</h3>
+                        <p class="text-[var(--text-light)] mb-6">
+                            Nossa meta é de **R$ 50.000** para cobrir todos os custos essenciais da nossa participação no mundial. Cada contribuição é fundamental para nos permitir competir em alto nível.
+                        </p>
+                        <div class="space-y-2 text-[var(--text-dark)] font-mono text-sm">
+                            <p>● Inscrição no Torneio: 15%</p>
+                            <p>● Peças e Equipamentos: 40%</p>
+                            <p>● Logística e Transporte: 25%</p>
+                            <p>● Hospedagem e Alimentação: 15%</p>
+                            <p>● Material de Divulgação: 5%</p>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-3">
+                        <div class="chart-container">
+                            <canvas id="budgetChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gemini API Section -->
+                <div class="card p-8 my-16 max-w-4xl mx-auto">
+                    <h3 class="text-3xl font-bold text-center text-white mb-2"><span class="text-[var(--accent-orange)]">✨</span> Pitch Personalizado com IA</h3>
+                    <p class="text-center text-[var(--text-dark)] mb-6">Insira os dados da sua empresa para gerar uma proposta de valor personalizada com a IA do Google.</p>
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="companyName" class="block text-sm font-medium text-[var(--text-light)] mb-1">Nome da Empresa</label>
+                            <input type="text" id="companyName" class="w-full px-4 py-2 bg-[var(--bg-dark)] border border-[#233554] rounded-sm focus:ring-2 focus:ring-[var(--accent-blue)] focus:outline-none" placeholder="Ex: TechCorp">
+                        </div>
+                        <div>
+                            <label for="companyIndustry" class="block text-sm font-medium text-[var(--text-light)] mb-1">Setor de Atuação</label>
+                            <input type="text" id="companyIndustry" class="w-full px-4 py-2 bg-[var(--bg-dark)] border border-[#233554] rounded-sm focus:ring-2 focus:ring-[var(--accent-blue)] focus:outline-none" placeholder="Ex: Software">
+                        </div>
+                    </div>
+                    <button id="generatePitchBtn" class="w-full bg-[var(--accent-orange)] text-[#0A192F] font-bold py-3 px-8 rounded-sm text-lg shadow-lg hover:bg-[#ff7a29] disabled:bg-gray-600 transition-all duration-300">
+                        Gerar Proposta
+                    </button>
+                    <div id="pitchResultContainer" class="mt-6 min-h-[100px] bg-[var(--bg-dark)] border-l-4 border-[var(--accent-blue)] p-4 rounded-r-sm text-[var(--text-light)]">
+                        <div id="spinner" class="hidden spinner mx-auto"></div>
+                        <p id="pitchResult">O resultado aparecerá aqui...</p>
+                    </div>
+                </div>
+
+                <h3 class="text-3xl font-semibold text-center mb-10 pt-10 text-white">PLANOS DE PATROCÍNIO</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="card p-6 rounded-sm">
+                        <h4 class="text-xl font-bold text-gray-400">BRONZE</h4>
+                        <p class="text-3xl font-bold my-4 text-white">R$ 2.000</p>
+                        <ul class="space-y-2 text-sm text-[var(--text-dark)]">
+                            <li>✓ Logo no banner da equipe</li>
+                            <li>✓ Agradecimento coletivo nas redes</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6 rounded-sm">
+                        <h4 class="text-xl font-bold text-[#D4AF37]">PRATA</h4>
+                        <p class="text-3xl font-bold my-4 text-white">R$ 5.000</p>
+                        <ul class="space-y-2 text-sm text-[var(--text-dark)]">
+                            <li>✓ Logo médio no robô e uniforme</li>
+                            <li>✓ Agradecimento em conjunto</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6 rounded-sm border-2 border-[var(--accent-blue)] transform scale-105 shadow-lg shadow-black/50">
+                        <p class="text-center bg-[var(--accent-blue)] text-[var(--bg-dark)] text-sm font-bold py-1 -mx-6 -mt-6 mb-4">RECOMENDADO</p>
+                        <h4 class="text-xl font-bold text-[var(--accent-blue)]">OURO</h4>
+                        <p class="text-3xl font-bold my-4 text-white">R$ 10.000</p>
+                        <ul class="space-y-2 text-sm text-[var(--text-dark)]">
+                            <li>✓ Logo em destaque no robô/uniforme</li>
+                            <li>✓ Postagens dedicadas nas redes</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6 rounded-sm">
+                        <h4 class="text-xl font-bold text-[var(--accent-orange)]">TITÂNIO</h4>
+                        <p class="text-3xl font-bold my-4 text-white">R$ 20.000+</p>
+                        <ul class="space-y-2 text-sm text-[var(--text-dark)]">
+                            <li>✓ Destaque MÁXIMO em tudo</li>
+                            <li>✓ Visita e demo na sua empresa</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contato Section -->
+        <section id="contato" class="py-20">
+             <div class="container mx-auto px-6 text-center">
+                 <h2 class="text-4xl font-bold text-white"><span class="text-[var(--accent-blue)]">05.</span> CONTATO</h2>
+                 <p class="mt-4 max-w-2xl mx-auto text-lg text-[var(--text-dark)]">
+                    Agradecemos seu tempo e interesse. Estamos à disposição para apresentar nosso projeto em mais detalhes e mostrar nosso robô em ação. Entre em contato e faça parte desta história de sucesso.
+                </p>
+                <div class="mt-10 font-mono">
+                    <p class="text-xl text-white">[Nome do Responsável]</p>
+                    <p class="text-[var(--text-dark)]">[Cargo na Equipe]</p>
+                    <a href="mailto:email@da.equipe.com" class="text-lg text-[var(--accent-blue)] hover:underline block mt-2">email@da.equipe.com</a>
+                    <a href="tel:+55XX-XXXXX-XXXX" class="text-lg text-[var(--accent-blue)] hover:underline block"> (XX) XXXXX-XXXX</a>
+                </div>
+                <a href="mailto:email@da.equipe.com" class="cta-button mt-8 inline-block font-mono py-3 px-8 rounded-sm text-lg shadow-lg">
+                    [ ENVIAR_MENSAGEM ]
+                </a>
+             </div>
+        </section>
+    </main>
+
+    <footer class="bg-black/30 text-[var(--text-dark)] py-6">
+        <div class="container mx-auto px-6 text-center text-sm font-mono">
+            <p>&copy; 2024 [Nome da Equipe]. Todos os direitos reservados.</p>
+            <p class="mt-1">Designed & Built by [Nome da Equipe]</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu Toggle
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Active Nav Link Highlighting on Scroll
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.5 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => { observer.observe(section); });
+            
+            // Chart.js Budget Chart
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            const budgetData = {
+                labels: ['Peças e Equipamentos', 'Logística e Transporte', 'Inscrição', 'Hospedagem', 'Divulgação'],
+                datasets: [{
+                    data: [40, 25, 15, 15, 5],
+                    backgroundColor: ['#64FFDA', '#FF8C42', '#8892B0', '#3A5A92', '#CCD6F6'],
+                    borderColor: '#172A45',
+                    borderWidth: 4,
+                    hoverOffset: 15
+                }]
+            };
+
+            const budgetConfig = {
+                type: 'doughnut',
+                data: budgetData,
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { color: '#8892B0', font: { size: 14 }, padding: 20, boxWidth: 15, usePointStyle: true, pointStyle: 'rectRounded' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed !== null) { label += context.parsed + '%'; }
+                                    return label;
+                                }
+                            },
+                            backgroundColor: '#0A192F', titleFont: { size: 16 }, bodyFont: { size: 14 }, padding: 12, cornerRadius: 3
+                        }
+                    },
+                    cutout: '60%',
+                }
+            };
+            new Chart(ctx, budgetConfig);
+
+            // Gemini API Pitch Generator
+            const generateBtn = document.getElementById('generatePitchBtn');
+            const companyNameInput = document.getElementById('companyName');
+            const companyIndustryInput = document.getElementById('companyIndustry');
+            const pitchResultEl = document.getElementById('pitchResult');
+            const spinnerEl = document.getElementById('spinner');
+
+            generateBtn.addEventListener('click', async () => {
+                const companyName = companyNameInput.value.trim();
+                const companyIndustry = companyIndustryInput.value.trim();
+
+                if (!companyName || !companyIndustry) {
+                    pitchResultEl.textContent = 'Por favor, preencha o nome e o setor da empresa.';
+                    return;
+                }
+
+                pitchResultEl.classList.add('hidden');
+                spinnerEl.classList.remove('hidden');
+                generateBtn.disabled = true;
+
+                const prompt = `Você é um especialista em marketing e patrocínios. Crie um parágrafo curto e convincente (máximo de 4 frases) para a empresa '${companyName}', que atua no setor de '${companyIndustry}', explicando por que patrocinar a nossa equipe de robótica é um investimento estratégico e de alto impacto. Destaque a conexão entre o setor da empresa e os valores da nossa equipe, como inovação, desenvolvimento de futuros talentos em STEM e tecnologia de ponta. Use um tom profissional e inspirador.`;
+
+                try {
+                    const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                    const payload = { contents: chatHistory };
+                    const apiKey = "";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                    
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) { throw new Error(`API error: ${response.statusText}`); }
+
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        pitchResultEl.textContent = text;
+                    } else { throw new Error('Resposta da API inválida ou vazia.'); }
+
+                } catch (error) {
+                    console.error("Error fetching Gemini API:", error);
+                    pitchResultEl.textContent = 'Ocorreu um erro ao gerar a proposta. Por favor, tente novamente mais tarde.';
+                } finally {
+                    spinnerEl.classList.add('hidden');
+                    pitchResultEl.classList.remove('hidden');
+                    generateBtn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
