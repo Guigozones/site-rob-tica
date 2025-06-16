@@ -1,4 +1,42 @@
+const carousel = document.getElementById('carousel');
+const totalSlides = carousel.children.length;
+let index = 0;
+
+const dotsContainer = document.getElementById('dots');
+
+// Cria bolinhas
+for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('span');
+    dot.className = 'w-3 h-3 rounded-full bg-gray-400 cursor-pointer';
+    dot.dataset.index = i;
+    dot.onclick = () => irParaSlide(i);
+    dotsContainer.appendChild(dot);
+}
+
+function atualizarBolinhas() {
+    [...dotsContainer.children].forEach((dot, i) => {
+        dot.className = `w-3 h-3 rounded-full ${i === index ? 'bg-[var(--accent-blue)]' : 'bg-gray-400'} cursor-pointer`;
+    });
+}
+
+function mudarSlide(direcao) {
+    index = (index + direcao + totalSlides) % totalSlides;
+    const offset = -index * 100;
+    carousel.style.transform = `translateX(${offset}%)`;
+    atualizarBolinhas();
+}
+
+function irParaSlide(i) {
+    index = i;
+    const offset = -index * 100;
+    carousel.style.transform = `translateX(${offset}%)`;
+    atualizarBolinhas();
+}
+
+atualizarBolinhas(); // Inicializa a bolinha ativa
 document.addEventListener('DOMContentLoaded', function () {
+
+
     // Mobile Menu Toggle
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -30,9 +68,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Chart.js Budget Chart
     const ctx = document.getElementById('budgetChart').getContext('2d');
     const budgetData = {
-        labels: ['Peças e Equipamentos', 'Logística e Transporte', 'Inscrição', 'Hospedagem', 'Divulgação'],
+        labels: ['Logística e Transporte', 'Inscrição', 'Hospedagem', 'Alimentação', 'Outros'],
         datasets: [{
-            data: [5, 60, 15, 15, 5],
+            data: [74.8, 6.5, 7, 9.3, 2.4],
             backgroundColor: ['#64FFDA', '#FF8C42', '#8892B0', '#3A5A92', '#CCD6F6'],
             borderColor: '#172A45',
             borderWidth: 4,

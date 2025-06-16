@@ -215,9 +215,29 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="order-1 md:order-2">
-                        <div class="p-2 border-2 border-[var(--accent-blue)]/30 rounded-sm">
-                            <img src="imagens/modelo robo.jpeg" alt="Render do Robô" class="rounded-sm">
+                    <div
+                        class="relative w-full max-w-xl mx-auto overflow-hidden rounded-lg border-2 border-[var(--accent-blue)]/30">
+                        <!-- Slides -->
+                        <div id="carousel" class="flex transition-transform duration-500 h-80">
+                            <img src="imagens/modelo robo.jpeg"
+                                class="w-full h-full object-cover flex-shrink-0 rounded-sm" alt="Imagem 1">
+                            <img src="imagens/modelo-cyber-squad.jpg"
+                                class="w-full h-full object-cover flex-shrink-0 rounded-sm" alt="Imagem 2">
+                            <img src="imagens/modelo-vespa-mecanica.jpg"
+                                class="w-full h-full object-cover flex-shrink-0 rounded-sm" alt="Imagem 3">
+                            <img src="imagens/modelo-entech.jpg"
+                                class="w-full h-full object-cover flex-shrink-0 rounded-sm" alt="Imagem 4">
+                        </div>
+
+                        <!-- Botões -->
+                        <button onclick="mudarSlide(-1)"
+                            class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow-md">⟨</button>
+                        <button onclick="mudarSlide(1)"
+                            class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow-md">⟩</button>
+
+                        <!-- Bolinhas -->
+                        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" id="dots">
+                            <!-- JS vai preencher aqui -->
                         </div>
                     </div>
                 </div>
@@ -307,15 +327,15 @@
                     <div class="lg:col-span-2">
                         <h3 class="text-3xl font-semibold mb-4 text-white">ALOCAÇÃO DE RECURSOS</h3>
                         <p class="text-[var(--text-light)] mb-6">
-                            Nossa meta é de R$ 300.000 para cobrir todos os custos essenciais da nossa participação no
+                            Nossa meta é de R$ 275.408,40 para cobrir todos os custos essenciais da nossa participação no
                             mundial. Cada contribuição é fundamental para nos permitir competir em alto nível.
                         </p>
                         <div class="space-y-2 text-[var(--text-dark)] font-mono text-sm">
-                            <p>● Inscrição no Torneio: 15%</p>
-                            <p>● Peças e Equipamentos: 5%</p>
-                            <p>● Logística e Transporte: 60%</p>
-                            <p>● Hospedagem e Alimentação: 15%</p>
-                            <p>● Material de Divulgação: 5%</p>
+                            <p>● Inscrição no Torneio: 6.5%</p>
+                            <p>● alimentação: 9.3%</p>
+                            <p>● Logística e Transporte: 74.8%</p>
+                            <p>● Hospedagem: 7%</p>
+                            <p>● Outros: 2.4%</p>
                         </div>
                     </div>
                     <div class="lg:col-span-3">
